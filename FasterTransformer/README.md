@@ -6,9 +6,11 @@ This repository provides a script and recipe to run the highly optimized transfo
 - [FasterTransformer](#fastertransformer)
   - [Table Of Contents](#table-of-contents)
   - [Model overview](#model-overview)
-    - [FasterTransformer V1](#fastertransformer-v1)
-    - [FasterTransformer V2](#fastertransformer-v2)
-    - [FasterTransformer V2.1](#fastertransformer-v21)
+    - [FasterTransformer v1](#fastertransformer-v1)
+    - [FasterTransformer v2](#fastertransformer-v2)
+    - [FasterTransformer v2.1](#fastertransformer-v21)
+    - [FasterTransformer v3.0](#fastertransformer-v30)
+    - [FasterTransformer v3.1](#fastertransformer-v31)
     - [Architecture matrix](#architecture-matrix)
   - [Release notes](#release-notes)
     - [Changelog](#changelog)
@@ -16,36 +18,70 @@ This repository provides a script and recipe to run the highly optimized transfo
 
 ## Model overview
 
-### FasterTransformer V1
+### FasterTransformer v1
 
-FasterTransformer V1 provides a highly optimized BERT equivalent Transformer layer for inference, including C++ API, TensorFlow op and TensorRT plugin. The experiments show that FasterTransformer V1 can provide 1.3 ~ 2 times speedup on NVIDIA Tesla T4 and NVIDIA Tesla V100 for inference. 
+FasterTransformer v1 provides a highly optimized BERT equivalent Transformer layer for inference, including C++ API, TensorFlow op and TensorRT plugin. The experiments show that FasterTransformer v1 can provide 1.3 ~ 2 times speedup on NVIDIA Tesla T4 and NVIDIA Tesla V100 for inference. 
 
-### FasterTransformer V2
+### FasterTransformer v2
 
-FastTransformer V2 adds a highly optimized OpenNMT-tf based decoder and decoding for inference in FasterTransformer V1, including C++ API and TensorFlow op. The experiments show that FasterTransformer V2 can provide 1.5 ~ 11 times speedup on NVIDIA Telsa T4 and NVIDIA Tesla V 100 for inference.
+FastTransformer v2 adds a highly optimized OpenNMT-tf based decoder and decoding for inference in FasterTransformer v1, including C++ API and TensorFlow op. The experiments show that FasterTransformer v2 can provide 1.5 ~ 11 times speedup on NVIDIA Telsa T4 and NVIDIA Tesla V 100 for inference.
 
-### FasterTransformer V2.1
+### FasterTransformer v2.1
 
-FasterTransformer V2.1 optimizes some kernels of encoder and decoder, adding the support of PyTorch, the support of remove the padding of encoder and the support of sampling algorithm in decoding. 
+FasterTransformer v2.1 optimizes some kernels of encoder and decoder, adding the support of PyTorch, the support of remove the padding of encoder and the support of sampling algorithm in decoding. 
+
+### FasterTransformer v3.0 
+
+FasterTransformer v3.0 adds the supporting of INT8 quantization for cpp and TensorFlow encoder model on Turing and Ampere GPUs. 
+
+### FasterTransformer v3.1
+
+First, FasterTransformer v3.1 adds the supporting of INT8 quantization of PyTorch encoder model on Turing and Ampere GPUs. Second, v3.1 improves the performances of encoder on FP16 and INT8. Compared to v3.0, v3.1 provides at most 1.2x speedup on T4 FP16, and 1.7x speedup on T4 INT8. Third, v3.1 supports the inference of GPT-2 model.
 
 ### Architecture matrix
 
-The following matrix shows the Architecture Differences between the model.
+The following matrix shows the architecture differences between the model.
 
-| Architecure               | Encoder             |Decoder             | Decoding with beam search | Decoding with sampling |
-|---------------------------|---------------------|--------------------|---------------------------|------------------------|
-|FasterTransformer V1    |  Yes | No  | No  | No  |
-|FasterTransformer V2    |  Yes | Yes | Yes | No  |
-|FasterTransformer V2.1  |  Yes | Yes | Yes | Yes |
-
+| Architecure               | Encoder           | Encoder INT8 quantization  | Decoder             | Decoding with beam search | Decoding with sampling | GPT-2 |
+|---------------------------|-------------------|----------------------------|---------------------|---------------------------|------------------------|-------|
+| v1   | Yes | No  | No  | No  | No  | No  |
+| v2   | Yes | No  | Yes | Yes | No  | No  |
+| v2.1 | Yes | No  | Yes | Yes | Yes | No  |
+| v3.0 | Yes | Yes | Yes | Yes | Yes | No  |
+| v3.1 | Yes | Yes | Yes | Yes | Yes | Yes |
 
 ## Release notes
 
-FasterTransformer V1 will be deprecated on July 2020. 
+FasterTransformer v1 was deprecated on July 2020. 
 
-FasterTransformer V2 will be deprecated on Dec 2020. 
+FasterTransformer v2 will be deprecated on Dec 2020. 
+
+FasterTransformer v2.1 will be deprecated on July 2021. 
+
+FasterTransformer v3.0 will be deprecated on Sep 2021. 
 
 ### Changelog
+
+Dec 2020
+- **Release the FasterTransformer 3.1**
+
+Nov 2020
+- Optimize the INT8 inference.
+- Support PyTorch INT8 inference.
+- Provide PyTorch INT8 quantiztion tools.
+- Integrate the fused multi-head attention kernel of TensorRT into FasterTransformer.
+- Add unit test of SQuAD. 
+- Update the missed NGC checkpoints.
+
+Sep 2020
+- Support GPT2
+- **Release the FasterTransformer 3.0**
+  - Support INT8 quantization of encoder of cpp and TensorFlow op.
+  - Add bert-tf-quantization tool.
+  - Fix the issue that Cmake 15 or Cmake 16 fail to build this project.
+
+Aug 2020
+- Fix the bug of trt plugin.
 
 June 2020
 - **Release the FasterTransformer 2.1**
@@ -85,14 +121,14 @@ March 2020
     - Add a normalization for inputs of decoder
     
 February 2020
- * Release the FasterTransformer 2.0
- * Provide a highly optimized OpenNMT-tf based decoder and decoding, including C++ API and TensorFlow OP.
- * Refine the sample codes of encoder.
- * Add dynamic batch size feature into encoder op.
+- **Release the FasterTransformer 2.0**
+  - Provide a highly optimized OpenNMT-tf based decoder and decoding, including C++ API and TensorFlow OP.
+  - Refine the sample codes of encoder.
+  - Add dynamic batch size feature into encoder op.
 
 July 2019
- * Release the FasterTransformer 1.0
- * Provide a highly optimized bert equivalent transformer layer, including C++ API, TensorFlow OP and TensorRT plugin.
+- **Release the FasterTransformer 1.0**
+  - Provide a highly optimized bert equivalent transformer layer, including C++ API, TensorFlow OP and TensorRT plugin.
  
 
 ## Known issues
