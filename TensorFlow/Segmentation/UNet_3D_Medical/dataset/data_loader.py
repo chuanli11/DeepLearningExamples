@@ -182,7 +182,7 @@ class Dataset:
             OneHotLabels(n_classes=4),
         ]
 
-        ds = ds.map(map_func=lambda x, y: apply_transforms(x, y, transforms),
+        ds = ds.map(map_func=lambda x, y: apply_transforms(x, y, 1, 1, transforms),
                     num_parallel_calls=tf.data.experimental.AUTOTUNE)
         ds = ds.batch(self._batch_size)
         ds = ds.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)

@@ -49,14 +49,14 @@ def main():
 
     max_steps = params.max_steps // (1 if params.benchmark else hvd.size())
 
-    if 'train' in params.exec_mode:
+    if 'train'  == params.exec_mode:
         training_hooks = get_hooks(params, logger)
         estimator.train(
             input_fn=dataset.train_fn,
             steps=max_steps,
             hooks=training_hooks)
 
-    if 'evaluate' in params.exec_mode:
+    if 'evaluate'  == params.exec_mode:
         result = estimator.evaluate(input_fn=dataset.eval_fn, steps=dataset.eval_size)
         data = parse_evaluation_results(result)
         if hvd.rank() == 0:
